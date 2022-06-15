@@ -57,7 +57,6 @@ function updateDisplay(output) {
 }
 
 function negative() {
-    console.log('test');
     if (tempOperandTwo && (!tempOperandTwo.includes("-"))) {
         tempOperandTwo = "-" + tempOperandTwo;
         refreshDisplay();
@@ -76,7 +75,7 @@ function negative() {
 function refreshDisplay(solution) {
     if (solution) {
         tempSolution = "";
-        tempOperandOne = solution;
+        tempOperandOne = String(solution);
         display.textContent = `${tempOperandOne} ${tempOperator} ${tempOperandTwo}`;
     } else {
         display.textContent = `${tempOperandOne} ${tempOperator} ${tempOperandTwo}`;
