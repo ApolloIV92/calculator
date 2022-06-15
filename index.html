@@ -5,32 +5,39 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
+    <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-    <div class="display">80085</div>
-    <div class="calcBodyDigits">
-        <button id="digit">7</button>
-        <button id="digit">8</button>
-        <button id="digit">9</button>
-        <button id="digit">4</button>
-        <button id="digit">5</button>
-        <button id="digit">6</button>
-        <button id="digit">1</button>
-        <button id="digit">2</button>
-        <button id="digit">3</button>
-        <button id="digit">0</button>
-        <button id="digit">.</button>
-        <button id="negative">+/-</button>
+    <div class="container">
+        <div class="title">Calculator</div>
+        <div class="display">80085</div>
+        <div class="calcBodyMain">
+            <div class="calcBodyDigits">
+                <button id="inputButton">7</button>
+                <button id="inputButton">8</button>
+                <button id="inputButton">9</button>
+                <button id="inputButton">4</button>
+                <button id="inputButton">5</button>
+                <button id="inputButton">6</button>
+                <button id="inputButton">1</button>
+                <button id="inputButton">2</button>
+                <button id="inputButton">3</button>
+                <button id="inputButton">0</button>
+                <button id="inputButton">.</button>
+                <button id="negative">±</button>
+            </div>
+            <div class="calcBodyOperators">
+                <button id="clear">C</button>
+                <button id="allClear">AC</button>
+                <button id="inputButton">+</button>
+                <button id="inputButton">X</button>
+                <button id="inputButton">-</button>
+                <button id="inputButton">/</button>
+                <button id="equals">=</button>
+            </div>
+        </div>
     </div>
-    <div class="calcBodyOperators">
-        <button id="clear">C</button>
-        <button id="allClear">AC</button>
-        <button id="operator">+</button>
-        <button id="operator">X</button>
-        <button id="operator">-</button>
-        <button id="operator">/</button>
-        <button id="equals">=</button>
-    </div>
+    <footer>Made by:  <img id="gh-logo" src="github-logo.png" alt="github logo"/><a href=https://github.com/ApolloIV92>  Rick Orzel</a></footer>
 </body>
 <script src="./javascript.js"></script>
 </html>

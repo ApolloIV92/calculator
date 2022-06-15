@@ -1,8 +1,7 @@
 const display = document.querySelector(".display");
 const allClear = document.querySelector("#allClear");
 const clear = document.querySelector('#clear');
-const digit = document.querySelectorAll("#digit");
-const opButton = document.querySelectorAll("#operator");
+const inputButton = document.querySelectorAll("#inputButton");
 const equals = document.querySelector("#equals");
 const negativeButton = document.querySelector("#negative");
 let tempOperandOne = "0";
@@ -12,50 +11,62 @@ let tempSolution = "";
 display.textContent = `${tempOperandOne} ${tempOperator} ${tempOperandTwo}`;
 
 
-
-
 //Calculator button logic
 
 clear.addEventListener("click", () => clearDisplay(true));
+
 allClear.addEventListener("click", () => clearDisplay());
+
 equals.addEventListener("click", () => calculateExpression());
+
 negativeButton.addEventListener("click", () => negative());
 
-digit.forEach(item => {
+inputButton.forEach(item => {
     item.addEventListener('click', event => {
-        updateDisplay(item.textContent);
+        handleInput(item.textContent);
     });
 })
 
-opButton.forEach(item => {
-    item.addEventListener('click', event => {
-        updateDisplay(item.textContent);
-    });
-})
-
-function updateDisplay(output) {
-    if ((output === "+" || output === "-" || output === "X" || output === "/") &&
-    (!tempOperandTwo)) {
-        tempOperator = output;
-        refreshDisplay();
-    } else if (tempOperandTwo) {
-        calculateExpression();
-        tempOperator = output;
-        refreshDisplay();
+function handleInput(input) {
+    if (input === ".") {
+        addDecimal();
+    } else if (input === "+" || input === "-" || input === "X" || input === "/") {
+        addOperator(input);
     } else if (tempOperator && (!tempOperandTwo)) {
-        tempOperandTwo = output;
+        tempOperandTwo = input;
     } else if (tempOperandTwo) {
-        tempOperandTwo += output;
+        tempOperandTwo += input;
     } else {
         if (tempOperandOne === "0") {
-            tempOperandOne = output;
+            tempOperandOne = input;
         } else {
-            tempOperandOne += output;
+            tempOperandOne += input;
         }
     }
     refreshDisplay();
 }
 
+
+function addDecimal() {
+    if ((tempOperandTwo) && ((!tempOperandTwo.includes(".")))) {
+        tempOperandTwo += ".";
+        refreshDisplay();
+    } else if ((tempOperandOne) && ((!tempOperandOne.includes(".")))) {
+        tempOperandOne += ".";
+        refreshDisplay();
+    }
+}
+
+function addOperator(input) {
+    if (!tempOperandTwo) {
+        tempOperator = input;
+        refreshDisplay();
+    } else {
+        calculateExpression();
+        tempOperator = input;
+        refreshDisplay();
+    }
+}
 function negative() {
     if (tempOperandTwo && (!tempOperandTwo.includes("-"))) {
         tempOperandTwo = "-" + tempOperandTwo;
@@ -71,6 +82,10 @@ function negative() {
         refreshDisplay();
     }
 }
+
+//Display logic. refreshDisplay is called through the application to reflect
+//user input in real time as a calculator would. clearDisplay handles logic
+//for the C and AC keys, but is called whenever the screen neds to be cleared.
 
 function refreshDisplay(solution) {
     if (solution) {
@@ -108,8 +123,8 @@ function clearDisplay(clearDigits) {
 }
 
 function calculateExpression() {
-    const numberOne = parseInt(tempOperandOne);
-    const numberTwo = parseInt(tempOperandTwo);
+    const numberOne = parseFloat(tempOperandOne);
+    const numberTwo = parseFloat(tempOperandTwo);
     let tempOperatorToRun;
     if (tempOperator === "+") {
         tempOperatorToRun = "add";
@@ -137,7 +152,7 @@ function calculateExpression() {
 
 
 
-
+//Math logic
 
 function addNumbers(numOne, numTwo) {
     return numOne + numTwo;
