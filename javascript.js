@@ -2,14 +2,14 @@ const display = document.querySelector(".display");
 const allClear = document.querySelector("#allClear");
 const clear = document.querySelector('#clear');
 const digit = document.querySelectorAll("#digit");
-const operatorObj = document.querySelectorAll("#operator");
+const opButton = document.querySelectorAll("#operator");
 const equals = document.querySelector("#equals");
-let temp = 0;
-let operandOne = "0";
-let operator = "";
-let operandTwo = "";
-let solution = "";
-display.textContent = `${operandOne} ${operator} ${operandTwo}`;
+const negativeButton = document.querySelector("#negative");
+let tempOperandOne = "0";
+let tempOperator = "";
+let tempOperandTwo = "";
+let tempSolution = "";
+display.textContent = `${tempOperandOne} ${tempOperator} ${tempOperandTwo}`;
 
 
 
@@ -19,6 +19,7 @@ display.textContent = `${operandOne} ${operator} ${operandTwo}`;
 clear.addEventListener("click", () => clearDisplay(true));
 allClear.addEventListener("click", () => clearDisplay());
 equals.addEventListener("click", () => calculateExpression());
+negativeButton.addEventListener("click", () => negative());
 
 digit.forEach(item => {
     item.addEventListener('click', event => {
@@ -26,77 +27,103 @@ digit.forEach(item => {
     });
 })
 
-operatorObj.forEach(item => {
+opButton.forEach(item => {
     item.addEventListener('click', event => {
         updateDisplay(item.textContent);
     });
 })
 
 function updateDisplay(output) {
-    if (solution) {
-        solution = "";
-        clearDisplay();
-        updateDisplay(output);
-    }
-    else if (output === "+" || output === "-" || output === "X" || output === "/") {
-        operator = output;
+    if ((output === "+" || output === "-" || output === "X" || output === "/") &&
+    (!tempOperandTwo)) {
+        tempOperator = output;
         refreshDisplay();
-    } else if (operator && (!operandTwo)) {
-        operandTwo = output;
-    } else if (operandTwo) {
-        operandTwo += output;
+    } else if (tempOperandTwo) {
+        calculateExpression();
+        tempOperator = output;
+        refreshDisplay();
+    } else if (tempOperator && (!tempOperandTwo)) {
+        tempOperandTwo = output;
+    } else if (tempOperandTwo) {
+        tempOperandTwo += output;
     } else {
-        if (operandOne === "0") {
-            operandOne = output;
+        if (tempOperandOne === "0") {
+            tempOperandOne = output;
         } else {
-            operandOne += output;
+            tempOperandOne += output;
         }
     }
     refreshDisplay();
 }
 
+function negative() {
+    console.log('test');
+    if (tempOperandTwo && (!tempOperandTwo.includes("-"))) {
+        tempOperandTwo = "-" + tempOperandTwo;
+        refreshDisplay();
+    } else if (tempOperandTwo) {
+        tempOperandTwo = tempOperandTwo.replace("-", "");
+        refreshDisplay();
+    } else if (!tempOperandOne.includes("-")) {
+        tempOperandOne = "-" + tempOperandOne;
+        refreshDisplay();
+    } else {
+        tempOperandOne = tempOperandOne.replace("-", "");
+        refreshDisplay();
+    }
+}
+
 function refreshDisplay(solution) {
     if (solution) {
-        display.textContent = solution;
+        tempSolution = "";
+        tempOperandOne = solution;
+        display.textContent = `${tempOperandOne} ${tempOperator} ${tempOperandTwo}`;
     } else {
-        display.textContent = `${operandOne} ${operator} ${operandTwo}`;
+        display.textContent = `${tempOperandOne} ${tempOperator} ${tempOperandTwo}`;
     } 
 }
 
 function clearDisplay(clearDigits) {
     if (clearDigits) {
-        if (operandTwo) {
-            operandTwo = "";
+        if (tempOperandTwo) {
+            tempOperandTwo = "";
             refreshDisplay();
         } else {
-            operandOne = "0";
-            operator = "";
+            tempOperandOne = "0";
+            tempOperandTwo = "";
+            tempSolution = "";
+            tempOperator = "";
             refreshDisplay();
         }
+    } else if (!tempSolution) {
+        tempOperandOne = "0";
+        tempOperator = "";
+        tempOperandTwo = "";
+        refreshDisplay();
     } else {
-        operandOne = "0";
-        operator = "";
-        operandTwo = "";
+        tempOperandOne = tempSolution;
+        tempOperator = "";
+        tempOperandTwo = "";
         refreshDisplay();
     }
 }
 
 function calculateExpression() {
-    const numberOne = parseInt(operandOne);
-    const numberTwo = parseInt(operandTwo);
-    let operatorToRun;
-    if (operator === "+") {
-        operatorToRun = "add";
-    } else if (operator === "-") {
-        operatorToRun = "sub";
-    } else if (operator === "X") {
-        operatorToRun = "mult";
-    } else if (operator === "/") {
-        operatorToRun = "div";
+    const numberOne = parseInt(tempOperandOne);
+    const numberTwo = parseInt(tempOperandTwo);
+    let tempOperatorToRun;
+    if (tempOperator === "+") {
+        tempOperatorToRun = "add";
+    } else if (tempOperator === "-") {
+        tempOperatorToRun = "sub";
+    } else if (tempOperator === "X") {
+        tempOperatorToRun = "mult";
+    } else if (tempOperator === "/") {
+        tempOperatorToRun = "div";
     }
-   const solution = operate(operatorToRun, numberOne, numberTwo);
+   tempSolution = operate(tempOperatorToRun, numberOne, numberTwo);
    clearDisplay();
-   refreshDisplay(solution);
+   refreshDisplay(tempSolution);
 }
 
 
@@ -129,8 +156,8 @@ function divNumbers(numOne, numTwo) {
     return numOne/numTwo;
 }
 
-function operate(operator, numOne, numTwo) {
-    switch(operator) {
+function operate(tempOperator, numOne, numTwo) {
+    switch(tempOperator) {
         case "add":
             return addNumbers(numOne, numTwo);
             break;
