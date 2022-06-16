@@ -21,7 +21,7 @@ body {
     justify-content: center;
     font-size: 80px;
     margin-bottom: 50px;
-    margin-top: -50px;
+    margin-top: -25px;
     background-color: #5D5C61;
     width: 100%;
     height: 125px;
@@ -41,19 +41,38 @@ body {
     flex-shrink: 0;
 }
 
+.displayHeader {
+    background-color: #7395AE;
+    width: 550px;
+    height: 200px;
+    margin-top:-10px;
+    padding-right: 10px;
+    margin-right: -10px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+
+}
+
 .display {
     border-style: solid;
     border-color: black;
     width: 550px;
-    height: 100px;
+    height: 120px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-end;
     justify-content: flex-end;
+    padding-top: 10px;
     padding-right: 10px;
-    font-size: 74px;
+    font-size: 64px;
     margin-bottom: 15px;
     color: white;
     background-color: #557A95;
+}
+
+.displayHeader > .outputSmall {
+    font-size: 32px;
 }
 
 .calcBodyMain {

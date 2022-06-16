@@ -1,25 +1,33 @@
-const display = document.querySelector(".display");
+const display = document.querySelector(".output");
+const displaySmall = document.querySelector(".outputSmall");
 const allClear = document.querySelector("#allClear");
 const clear = document.querySelector('#clear');
 const inputButton = document.querySelectorAll("#inputButton");
 const equals = document.querySelector("#equals");
 const negativeButton = document.querySelector("#negative");
 let tempOperandOne = "0";
+let storedOperandOne = "";
 let tempOperator = "";
+let storedOperator = "";
 let tempOperandTwo = "";
 let tempSolution = "";
 display.textContent = `${tempOperandOne} ${tempOperator} ${tempOperandTwo}`;
+displaySmall.textContent = `${storedOperandOne} ${storedOperator}`;
+
+
 
 
 //Calculator button logic
 
-clear.addEventListener("click", () => clearDisplay(true));
+clear.addEventListener("click", () => clearCharacter());
 
-allClear.addEventListener("click", () => clearDisplay());
+allClear.addEventListener("click", () => fullClearDisplay());
 
 equals.addEventListener("click", () => calculateExpression());
 
 negativeButton.addEventListener("click", () => negative());
+
+document.addEventListener("keydown", (e) => keyInput(e.key));
 
 inputButton.forEach(item => {
     item.addEventListener('click', event => {
@@ -27,25 +35,101 @@ inputButton.forEach(item => {
     });
 })
 
+function keyInput(key) {
+    switch (key) {
+        case "+":
+            handleInput(key);
+            break;
+        case "-":
+            handleInput(key);
+            break;
+        case "*":
+            handleInput(key);
+            break;
+        case "/":
+            handleInput(key);
+            break;
+        case ".":
+            handleInput(key);
+            break;
+        case "1":
+            handleInput(key);
+            break;
+        case "2":
+            handleInput(key);
+            break;
+        case "3":
+            handleInput(key);
+            break;
+        case "4":
+            handleInput(key);
+            break;
+        case "5":
+            handleInput(key);
+            break;
+        case "6":
+            handleInput(key);
+            break;
+        case "7":
+            handleInput(key);
+            break;
+        case "8":
+            handleInput(key);
+            break;
+        case "9":
+            handleInput(key);
+            break;
+        case "0":
+            handleInput(key);
+            break;
+        case "Enter":
+            calculateExpression();
+        case "Backspace":
+            fullClearDisplay();
+            break;
+        case "Delete":
+            clearCharacter();
+            break;
+        default:
+            break;
+        }
+    }
+//console.log(Boolean(parseInt(key)));
+
+
+
 function handleInput(input) {
     if (input === ".") {
         addDecimal();
     } else if (input === "+" || input === "-" || input === "X" || input === "/") {
         addOperator(input);
-    } else if (tempOperator && (!tempOperandTwo)) {
-        tempOperandTwo = input;
-    } else if (tempOperandTwo) {
-        tempOperandTwo += input;
     } else {
-        if (tempOperandOne === "0") {
-            tempOperandOne = input;
-        } else {
-            tempOperandOne += input;
-        }
+        addInteger(input);
     }
     refreshDisplay();
 }
 
+function addInteger(input) {
+    if (storedOperator && (!tempOperandTwo) || tempOperandTwo === "0") {
+        tempOperandTwo = input;
+    } else if (tempOperandTwo) {
+        if (display.textContent.length<15) {
+            tempOperandTwo += input;
+        } else {
+            return;
+        }
+    } else {
+        if (tempOperandOne === "0") {
+            tempOperandOne = input;
+        } else {
+            if (display.textContent.length<15) {
+                tempOperandOne += input;
+        } else {
+            return;
+        }
+        }
+    }
+}
 
 function addDecimal() {
     if ((tempOperandTwo) && ((!tempOperandTwo.includes(".")))) {
@@ -59,11 +143,13 @@ function addDecimal() {
 
 function addOperator(input) {
     if (!tempOperandTwo) {
-        tempOperator = input;
+        storedOperator = input;
+        storedOperandOne = tempOperandOne;
+        tempOperandOne = "0";
         refreshDisplay();
     } else {
         calculateExpression();
-        tempOperator = input;
+        storedOperator = input;
         refreshDisplay();
     }
 }
@@ -84,59 +170,86 @@ function negative() {
 }
 
 //Display logic. refreshDisplay is called through the application to reflect
-//user input in real time as a calculator would. clearDisplay handles logic
+//user input in real time as a calculator would. fullClearDisplay handles logic
 //for the C and AC keys, but is called whenever the screen neds to be cleared.
+
+
+function fullClearDisplay() {
+    tempOperandOne = "0";
+    tempOperandTwo = "";
+    tempOperator = "";
+    storedOperandOne = "";
+    storedOperator = "";
+    refreshDisplay();
+    }
+
+function clearCharacter() {
+    if (tempOperandTwo) {
+        tempOperandTwo = "0";
+        refreshDisplay();
+    } else {
+        tempOperandOne = "0";
+        refreshDisplay();
+    }
+}
+
+//function refreshDisplay(solution) {
+//    if (solution) {
+//        tempSolution = "";
+//        tempOperandOne = String(solution);
+//        display.textContent = `${tempOperandOne}`;
+//        displaySmall.textContent = "";
+//   } else if (tempOperator) {
+//        displaySmall.textContent = `${tempOperandOne} ${tempOperator}`;
+//    }
+//    if (tempOperandTwo) {
+//        display.textContent = `${tempOperandTwo}`;
+//    } else {
+//        display.textContent = `${tempOperandOne}`
+//    }
+//}
 
 function refreshDisplay(solution) {
     if (solution) {
         tempSolution = "";
         tempOperandOne = String(solution);
-        display.textContent = `${tempOperandOne} ${tempOperator} ${tempOperandTwo}`;
-    } else {
-        display.textContent = `${tempOperandOne} ${tempOperator} ${tempOperandTwo}`;
+        display.textContent = `${tempOperandOne}`;
+        displaySmall.textContent = "";
+        return;
     } 
-}
-
-function clearDisplay(clearDigits) {
-    if (clearDigits) {
-        if (tempOperandTwo) {
-            tempOperandTwo = "";
-            refreshDisplay();
-        } else {
-            tempOperandOne = "0";
-            tempOperandTwo = "";
-            tempSolution = "";
-            tempOperator = "";
-            refreshDisplay();
-        }
-    } else if (!tempSolution) {
-        tempOperandOne = "0";
-        tempOperator = "";
-        tempOperandTwo = "";
-        refreshDisplay();
+    displaySmall.textContent = `${storedOperandOne} ${storedOperator}`;
+    if (!tempOperandTwo) {
+    display.textContent = `${tempOperandOne}`;
     } else {
-        tempOperandOne = tempSolution;
-        tempOperator = "";
-        tempOperandTwo = "";
-        refreshDisplay();
+        display.textContent = `${tempOperandTwo}`;
     }
 }
 
 function calculateExpression() {
-    const numberOne = parseFloat(tempOperandOne);
+    if (!storedOperandOne) {
+        refreshDisplay(tempOperandOne);
+        return;
+    }
+    const numberOne = parseFloat(storedOperandOne);
     const numberTwo = parseFloat(tempOperandTwo);
     let tempOperatorToRun;
-    if (tempOperator === "+") {
+    if (storedOperator === "+") {
         tempOperatorToRun = "add";
-    } else if (tempOperator === "-") {
+    } else if (storedOperator === "-") {
         tempOperatorToRun = "sub";
-    } else if (tempOperator === "X") {
+    } else if (storedOperator === "X") {
         tempOperatorToRun = "mult";
-    } else if (tempOperator === "/") {
+    } else if (storedOperator === "/") {
         tempOperatorToRun = "div";
     }
    tempSolution = operate(tempOperatorToRun, numberOne, numberTwo);
-   clearDisplay();
+   fullClearDisplay();
+   if (tempSolution === Infinity) {
+    tempSolution = "ERROR";
+   }
+   if (tempSolution > 9999999999999) {
+    tempSolution = scientificNotation(tempSolution);
+   }
    refreshDisplay(tempSolution);
 }
 
@@ -169,6 +282,14 @@ function multNumbers(numOne, numTwo) {
 function divNumbers(numOne, numTwo) {
     return numOne/numTwo;
 }
+
+function scientificNotation(input) {
+    const numInSciNot = {};
+    [numInSciNot.coefficient, numInSciNot.exponent] =
+      input.toExponential().split('e').map(item => Number(item));
+      return `${numInSciNot.coefficient.toFixed(7)} x 10^${numInSciNot.exponent}`;
+}
+
 
 function operate(tempOperator, numOne, numTwo) {
     switch(tempOperator) {
