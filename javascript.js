@@ -84,6 +84,7 @@ function keyInput(key) {
             break;
         case "Enter":
             calculateExpression();
+            break;
         case "Backspace":
             fullClearDisplay();
             break;
@@ -228,6 +229,9 @@ function refreshDisplay(solution) {
 function calculateExpression() {
     if (!storedOperandOne) {
         refreshDisplay(tempOperandOne);
+        return;
+    } else if (storedOperandOne && storedOperator) {
+        refreshDisplay(storedOperandOne);
         return;
     }
     const numberOne = parseFloat(storedOperandOne);
